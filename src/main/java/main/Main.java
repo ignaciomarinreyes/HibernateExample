@@ -8,20 +8,20 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        //nativeQuery();
+        nativeQuery();
         //create();
         //read();
         //update();
         //remove();
-        createCar();
+        //createRoute();
     }
 
-    private static void createCar() {
+    private static void createRoute() {
         Transaction transaction = null;
-        Coche car = new Coche("Paco", new Empleado(5, "Peco"));
+        Route route = new Route("Paseo por el mar", new User(2, "Paco"));
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.save(car);
+            session.save(route);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -29,15 +29,15 @@ public class Main {
             }
             e.printStackTrace();
         }
-        System.out.println(car.toString());
+        System.out.println(route.toString());
     }
 
     private static void remove() {
         Transaction transaction = null;
-        Empleado empleado = new Empleado(1);
+        User user = new User(1);
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.remove(empleado);
+            session.remove(user);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -49,11 +49,11 @@ public class Main {
 
     private static void update() {
         Transaction transaction = null;
-        Empleado empleado = read();
-        empleado.setNombre("Pedro");
+        User user = read();
+        user.setNombre("Pedro");
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.saveOrUpdate(empleado);
+            session.saveOrUpdate(user);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -61,15 +61,15 @@ public class Main {
             }
             e.printStackTrace();
         }
-        System.out.println(empleado.toString());
+        System.out.println(user.toString());
     }
 
-    private static Empleado read() {
+    private static User read() {
         Transaction transaction = null;
-        Empleado empleado = null;
+        User user = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            empleado = session.get(Empleado.class, 1);
+            user = session.get(User.class, 1);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -77,16 +77,16 @@ public class Main {
             }
             e.printStackTrace();
         }
-        System.out.println(empleado.toString());
-        return empleado;
+        System.out.println(user.toString());
+        return user;
     }
 
     private static void create() {
         Transaction transaction = null;
-        Empleado empleado = new Empleado("Paco");
+        User user = new User("Paco");
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.save(empleado);
+            session.save(user);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -94,15 +94,15 @@ public class Main {
             }
             e.printStackTrace();
         }
-        System.out.println(empleado.toString());
+        System.out.println(user.toString());
     }
 
     private static void nativeQuery() {
-        List<Empleado> lista = null;
+        List<User> usuarios = null;
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            lista = session.createNativeQuery("SELECT * FROM Empleado", Empleado.class).list();
+            usuarios = session.createNativeQuery("SELECT * FROM user", User.class).list();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -110,8 +110,8 @@ public class Main {
             }
             e.printStackTrace();
         }
-        for (Empleado empleado : lista) {
-            System.out.println(empleado.toString());
+        for (User user : usuarios) {
+            System.out.println(user.toString());
         }
     }
 }
