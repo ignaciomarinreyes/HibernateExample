@@ -3,17 +3,40 @@ package main;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.Query;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        nativeQuery();
+        //nativeQuery();
         //create();
         //read();
         //update();
         //remove();
         //createRoute();
+        findByNombreUser("Paco");
+    }
+
+    private static void findByNombreUser(String nombre) {
+        List<User> usuarios = null;
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query query = session.createNativeQuery("SELECT * FROM user WHERE nombre = ?", User.class);
+            query.setParameter(1, nombre);
+            usuarios = query.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        for (User user : usuarios) {
+            System.out.println(user.toString());
+            System.out.println(user.getRoutes());
+        }
     }
 
     private static void createRoute() {

@@ -1,10 +1,17 @@
 package main;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "route")
 public class Route {
+
+    @Version
+    private int version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +22,12 @@ public class Route {
     private String nombre;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "id_user", foreignKey=@ForeignKey(name = "fk_id_user_route"))
     private User user;
+
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Coordinate> coordinates;
 
     public Route() {
 
